@@ -163,6 +163,45 @@
             
             // Update on window resize
             window.addEventListener('resize', checkMobile);
+            
+            // Randomize the first four sliders on page load
+            function randomizeSliders() {
+                // Get the sliders
+                const outerRadiusSlider = document.getElementById('outer-radius');
+                const innerRadiusSlider = document.getElementById('inner-radius');
+                const penOffsetSlider = document.getElementById('pen-offset');
+                const heightAmplitudeSlider = document.getElementById('height-amplitude');
+                
+                // Generate random values within the sliders' ranges
+                outerRadiusSlider.value = Math.floor(Math.random() * (100 - 30 + 1)) + 30; // Between 30-100
+                
+                // Make sure inner radius is less than outer radius
+                const maxInnerRadius = Math.min(90, outerRadiusSlider.value - 10);
+                innerRadiusSlider.value = Math.floor(Math.random() * (maxInnerRadius - 10 + 1)) + 10;
+                
+                // Pen offset should be interesting but not too extreme
+                penOffsetSlider.value = Math.floor(Math.random() * (120 - 20 + 1)) + 20;
+                
+                // Random height amplitude
+                heightAmplitudeSlider.value = Math.floor(Math.random() * 101); // 0-100
+                
+                // Trigger change events to update the spirograph
+                const event = new Event('input');
+                outerRadiusSlider.dispatchEvent(event);
+                innerRadiusSlider.dispatchEvent(event);
+                penOffsetSlider.dispatchEvent(event);
+                heightAmplitudeSlider.dispatchEvent(event);
+                
+                console.log('Sliders randomized:', {
+                    outerRadius: outerRadiusSlider.value,
+                    innerRadius: innerRadiusSlider.value,
+                    penOffset: penOffsetSlider.value,
+                    heightAmplitude: heightAmplitudeSlider.value
+                });
+            }
+            
+            // Run the randomization
+            randomizeSliders();
         });
     </script>
 </body>
