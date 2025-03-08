@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Spirograph</title>
+    <link rel="stylesheet" href="spirograph.css">
+    <style>
+        /* Additional style to ensure the canvas takes full space */
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="info">
+            <h1>3D Spirograph</h1>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="outer-radius">Outer Radius:</label>
+                    <input type="range" id="outer-radius" min="10" max="100" value="80" step="1">
+                </div>
+                <div class="control-group">
+                    <label for="inner-radius">Inner Radius:</label>
+                    <input type="range" id="inner-radius" min="10" max="90" value="40" step="1">
+                </div>
+                <div class="control-group">
+                    <label for="pen-offset">Pen Offset:</label>
+                    <input type="range" id="pen-offset" min="10" max="120" value="60" step="1">
+                </div>
+                <div class="control-group">
+                    <label for="height-amplitude">3D Height:</label>
+                    <input type="range" id="height-amplitude" min="0" max="100" value="30" step="1">
+                </div>
+                <div class="control-group">
+                    <label for="speed">Speed:</label>
+                    <input type="range" id="speed" min="0.1" max="5" value="1" step="0.1">
+                </div>
+                <div class="control-group">
+                    <label for="line-thickness">Line Thickness:</label>
+                    <input type="range" id="line-thickness" min="1" max="10" value="3" step="0.5">
+                </div>
+                <div class="color-controls">
+                    <div class="control-group">
+                        <label for="primary-color">Primary Color:</label>
+                        <input type="color" id="primary-color" value="#ff0066">
+                    </div>
+                    <div class="control-group">
+                        <label for="secondary-color">Secondary Color:</label>
+                        <input type="color" id="secondary-color" value="#00ffcc">
+                    </div>
+                </div>
+                <div class="control-group checkbox-group">
+                    <input type="checkbox" id="show-gears">
+                    <label for="show-gears">Show Gears</label>
+                </div>
+                <div class="buttons">
+                    <button id="reset-btn">Reset</button>
+                    <button id="clear-btn">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Updated Three.js and OrbitControls imports -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.137.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="spirograph.js"></script>
+</body>
+</html> 
