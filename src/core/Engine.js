@@ -1,6 +1,20 @@
 /**
- * Engine.js
- * Main engine that coordinates all components and handles the animation loop
+ * Engine.js - 应用程序核心引擎
+ * 
+ * 作用：
+ * 1. 作为应用程序的中央协调器
+ * 2. 管理动画循环和场景更新
+ * 3. 连接各个子系统如渲染器、相机、螺旋图控制器等
+ * 
+ * 被调用：
+ * - src/main.js: 作为应用的主要组件
+ * 
+ * 调用以下模块：
+ * - render/Scene.js
+ * - render/Renderer.js
+ * - camera/CameraController.js
+ * - spirograph/SpirographController.js
+ * - utils/ThreeLoader.js
  */
 
 import { SceneManager } from '../render/Scene.js';

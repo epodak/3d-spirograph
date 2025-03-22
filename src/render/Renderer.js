@@ -1,6 +1,17 @@
 /**
- * Renderer.js
- * Manages the WebGL renderer
+ * Renderer.js - WebGL渲染器管理
+ * 
+ * 作用：
+ * 1. 创建和配置THREE.js的WebGL渲染器
+ * 2. 设置渲染尺寸和质量选项
+ * 3. 提供渲染场景的方法
+ * 4. 管理OrbitControls相机控制
+ * 
+ * 被调用：
+ * - app.js: 初始化和使用渲染器
+ * 
+ * 调用以下模块：
+ * - utils/ThreeLoader.js: 获取THREE.js实例和组件
  */
 
 import { waitForThree, waitForThreeComponent } from '../utils/ThreeLoader.js';

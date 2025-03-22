@@ -1,6 +1,15 @@
 /**
- * server.js
- * Simple Express server for local development
+ * server.js - 服务器重定向文件
+ * 
+ * 作用：
+ * 1. 作为兼容性入口点，重定向到新的服务器位置
+ * 2. 保持与原有启动命令的向后兼容性
+ * 
+ * 被调用：
+ * - 旧版npm脚本(如果直接使用根目录下的server.js)
+ * 
+ * 调用以下模块：
+ * - src/server/server.js: 导入并执行新服务器
  */
 
 import express from 'express';

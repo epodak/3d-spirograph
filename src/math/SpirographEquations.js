@@ -1,6 +1,15 @@
 /**
- * SpirographEquations.js
- * Contains all mathematical formulas for calculating spirograph positions and derivatives
+ * SpirographEquations.js - 螺旋图数学计算核心
+ * 
+ * 作用：
+ * 1. 提供计算螺旋图位置和轨迹的数学函数
+ * 2. 实现螺旋图的几何数学模型
+ * 
+ * 被调用：
+ * - spirograph/SpirographController.js: 用于生成螺旋图点和轨迹
+ * 
+ * 调用以下模块：
+ * - utils/ThreeLoader.js: 获取THREE.js的Vector3构造函数
  */
 
 import { waitForThree } from '../utils/ThreeLoader.js';

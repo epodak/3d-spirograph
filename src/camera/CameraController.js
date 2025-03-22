@@ -1,6 +1,17 @@
 /**
- * CameraController.js
- * Manages camera functionality including the rollercoaster mode
+ * CameraController.js - 相机控制管理器
+ * 
+ * 作用：
+ * 1. 管理THREE.js相机的行为和控制
+ * 2. 提供不同的相机模式和视角切换
+ * 3. 处理与相机相关的用户交互
+ * 
+ * 被调用：
+ * - src/core/Engine.js: 初始化相机控制
+ * - src/ui/ControlPanel.js: 响应UI操作修改相机设置
+ * 
+ * 调用以下模块：
+ * - utils/ThreeLoader.js: 获取THREE实例
  */
 
 import { Vector3 } from 'three';

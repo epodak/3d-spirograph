@@ -1,6 +1,19 @@
 /**
- * ControlPanel.js
- * Manages the UI control panel and user interactions
+ * ControlPanel.js - 高级控制面板
+ * 
+ * 作用：
+ * 1. 提供比UIPanel更复杂的控制界面
+ * 2. 集成多个UI组件为一个综合控制面板
+ * 3. 与引擎(Engine)直接交互
+ * 
+ * 被调用：
+ * - src/main.js: 作为主UI组件
+ * - src/core/Engine.js: 可能作为UI引用
+ * 
+ * 调用以下模块：
+ * - spirograph/SpirographController.js (通过Engine)
+ * - camera/CameraController.js (通过Engine)
+ * - gears/GearSystem.js (通过Engine)
  */
 
 export class ControlPanel {

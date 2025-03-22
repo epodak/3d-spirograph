@@ -1,6 +1,33 @@
 /**
- * ThreeLoader.js
- * Helper to ensure Three.js is loaded before using it
+ * ThreeLoader.js - THREE.js加载管理工具
+ * 
+ * 作用：
+ * 1. 确保THREE.js库正确加载
+ * 2. 提供异步等待THREE.js加载完成的方法
+ * 3. 加载THREE.js的特定组件(如OrbitControls)
+ * 
+ * 被调用：
+ * - app.js: 等待THREE.js加载
+ * - render/Scene.js: 获取THREE实例
+ * - render/Renderer.js: 获取THREE和OrbitControls实例
+ * - spirograph/SpirographController.js: 获取THREE实例
+ * - math/SpirographEquations.js: 获取THREE.Vector3
+ * 作用：
+ * 1. 提供异步THREE.js加载机制
+ * 2. 解决THREE.js全局对象的获取问题
+ * 3. 支持加载THREE.js组件如OrbitControls
+ * 4. 处理CDN加载失败的情况并提供备用方案
+ * 
+ * 被调用：
+ * 几乎被所有使用THREE.js的模块调用，包括：
+ * - app.js
+ * - render/Scene.js
+ * - render/Renderer.js
+ * - spirograph/SpirographController.js
+ * - math/SpirographEquations.js
+ * 
+ * 调用外部资源：
+ * - THREE.js (全局对象或动态加载)
  */
 
 /**

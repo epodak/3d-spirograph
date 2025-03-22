@@ -1,6 +1,16 @@
-/* 
- * Spirograph CSS
- * Main styles for the 3D Spirograph application
+/**
+ * spirograph.css - 3D螺旋图应用程序样式表
+ * 
+ * 作用：
+ * 1. 定义应用程序的整体外观和样式
+ * 2. 提供加载屏幕、GitHub链接等UI元素的样式
+ * 3. 实现响应式布局适配不同屏幕尺寸
+ * 
+ * 被调用：
+ * - index.html: 通过<link rel="stylesheet">引用
+ * 
+ * 相关文件：
+ * - ui/UIPanel.js: 动态创建的UI元素也使用这里定义的部分样式
  */
 
 body {

@@ -1,6 +1,16 @@
 /**
- * UIPanel.js
- * Creates and manages the UI control panel for the spirograph
+ * UIPanel.js - 用户界面控制面板
+ * 
+ * 作用：
+ * 1. 创建和管理UI控制元素(滑块、按钮等)
+ * 2. 处理用户输入并更新螺旋图参数
+ * 3. 提供重置和动画控制功能
+ * 
+ * 被调用：
+ * - app.js: 创建UI面板实例
+ * 
+ * 调用以下模块：
+ * - spirograph/SpirographController.js: 更新螺旋图参数和控制动画
  */
 
 export default class UIPanel {

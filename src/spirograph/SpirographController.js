@@ -1,6 +1,18 @@
 /**
- * SpirographController.js
- * Manages the generation and visualization of the spirograph
+ * SpirographController.js - 螺旋图生成和控制
+ * 
+ * 作用：
+ * 1. 管理螺旋图的参数和状态
+ * 2. 生成螺旋图的几何形状
+ * 3. 控制螺旋图的动画和可视化
+ * 
+ * 被调用：
+ * - app.js: 创建螺旋图控制器实例
+ * - ui/UIPanel.js: 接收用户输入的参数更新
+ * 
+ * 调用以下模块：
+ * - math/SpirographEquations.js: 获取螺旋图的数学计算
+ * - utils/ThreeLoader.js: 获取THREE.js实例
  */
 
 import { getSpirographPosition, getSpirographDerivative, getInnerGearPosition } from '../math/SpirographEquations.js';

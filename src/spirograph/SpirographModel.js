@@ -1,6 +1,17 @@
 /**
- * SpirographModel.js
- * Data model for spirograph parameters and state
+ * SpirographModel.js - 螺旋图数据模型
+ * 
+ * 作用：
+ * 1. 存储和管理螺旋图的参数
+ * 2. 提供参数验证和限制
+ * 3. 管理状态信息
+ * 
+ * 被调用：
+ * - src/spirograph/SpirographController.js: 作为数据模型
+ * - src/ui/UIPanel.js: 通过控制器更新参数
+ * 
+ * 调用以下模块：
+ * 无直接依赖，主要是数据存储
  */
 
 export class SpirographModel {

@@ -1,6 +1,17 @@
 /**
- * SpirographGeometry.js
- * Manages the creation and update of the spirograph's geometry
+ * SpirographGeometry.js - 螺旋图几何生成器
+ * 
+ * 作用：
+ * 1. 根据数学计算创建螺旋图的THREE.js几何图形
+ * 2. 提供不同的几何表示方法(线条、管道等)
+ * 3. 优化大量点的几何处理
+ * 
+ * 被调用：
+ * - src/spirograph/SpirographController.js: 用于创建可视化几何体
+ * 
+ * 调用以下模块：
+ * - utils/ThreeLoader.js: 获取THREE实例
+ * - math/SpirographEquations.js: 获取点位置计算
  */
 
 import { 

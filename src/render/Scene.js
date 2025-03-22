@@ -1,6 +1,17 @@
 /**
- * Scene.js
- * Manages the 3D scene setup and components
+ * Scene.js - 3D场景管理器
+ * 
+ * 作用：
+ * 1. 创建和管理THREE.js场景实例
+ * 2. 设置场景组件如相机、灯光等
+ * 3. 提供添加/移除对象的接口
+ * 
+ * 被调用：
+ * - app.js: 初始化场景
+ * - render/Renderer.js: 获取场景进行渲染
+ * 
+ * 调用以下模块：
+ * - utils/ThreeLoader.js: 获取THREE.js实例
  */
 
 import { waitForThree } from '../utils/ThreeLoader.js';

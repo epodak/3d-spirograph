@@ -1,6 +1,18 @@
 /**
- * GearSystem.js
- * Manages the visualization of gears in the spirograph
+ * GearSystem.js - 齿轮系统控制器
+ * 
+ * 作用：
+ * 1. 创建和管理3D齿轮的可视化
+ * 2. 处理齿轮的运动和互动物理
+ * 3. 与螺旋图生成器联动
+ * 
+ * 被调用：
+ * - src/spirograph/SpirographController.js: 显示与螺旋图相关的齿轮
+ * - src/core/Engine.js: 初始化齿轮系统
+ * 
+ * 调用以下模块：
+ * - utils/ThreeLoader.js: 获取THREE实例
+ * - math/SpirographEquations.js: 获取齿轮位置计算
  */
 
 import { 
