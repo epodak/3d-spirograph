@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const primaryColorInput = document.getElementById('primary-color');
     const secondaryColorInput = document.getElementById('secondary-color');
     const showGearsCheckbox = document.getElementById('show-gears');
+    const rollercoasterViewCheckbox = document.getElementById('rollercoaster-view');
     const resetBtn = document.getElementById('reset-btn');
     const clearBtn = document.getElementById('clear-btn');
 
@@ -179,7 +180,10 @@ document.addEventListener('DOMContentLoaded', () => {
             primaryColor: primaryColorInput.value,
             secondaryColor: secondaryColorInput.value,
             showGears: showGearsCheckbox.checked,
+            rollercoasterView: rollercoasterViewCheckbox.checked,
             t: 0,
+            cameraT: 0, // 相机位置的参数
+            cameraOffset: 0.1, // 相机与当前绘制点的偏移量
             autoRotate: true,
             // Parameters for gradual drawing
             drawSpeed: 1, // Points to add per frame
@@ -259,6 +263,26 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Gear visibility updated to:', gearsGroup.visible);
         });
 
+        // 监听过山车视角复选框
+        rollercoasterViewCheckbox.addEventListener('change', () => {
+            console.log('Rollercoaster view changed, new value:', rollercoasterViewCheckbox.checked);
+            params.rollercoasterView = rollercoasterViewCheckbox.checked;
+            
+            // 切换视角时，如果启用过山车视角，将相机位置重置到起点
+            if (params.rollercoasterView) {
+                // 禁用OrbitControls，因为我们将手动控制相机
+                controls.enabled = false;
+                // 重置相机参数，让它从螺旋图形的起点开始
+                params.cameraT = params.t > 0.1 ? params.t - 0.1 : 0;
+            } else {
+                // 重新启用OrbitControls
+                controls.enabled = true;
+                // 恢复相机位置
+                camera.position.set(100, 100, 200);
+                camera.lookAt(0, 0, 0);
+            }
+        });
+
         function updateColors() {
             params.primaryColor = primaryColorInput.value;
             params.secondaryColor = secondaryColorInput.value;
@@ -275,16 +299,34 @@ document.addEventListener('DOMContentLoaded', () => {
             updateParams();
             spirographPoints = [];
             params.t = 0;
+            params.cameraT = 0; // 重置相机参数
             params.isDrawing = true;
             updateGeometries();
+            
+            // 如果当前是在过山车视角，则需要重置相机位置到起点
+            if (params.rollercoasterView) {
+                const startPos = getSpirographPosition(0);
+                const lookAtPos = getSpirographPosition(0.1);
+                camera.position.copy(startPos);
+                camera.lookAt(lookAtPos);
+            }
         }
 
         // Clear the spirograph
         function clearSpirograph() {
             spirographPoints = [];
             params.t = 0;
+            params.cameraT = 0; // 重置相机参数
             params.isDrawing = true;
             updateGeometries();
+            
+            // 如果当前是在过山车视角，则需要重置相机位置到起点
+            if (params.rollercoasterView) {
+                const startPos = getSpirographPosition(0);
+                const lookAtPos = getSpirographPosition(0.1);
+                camera.position.copy(startPos);
+                camera.lookAt(lookAtPos);
+            }
         }
 
         // Event listeners for buttons
@@ -400,8 +442,33 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update gear positions
             updateGearPositions(params.t);
             
-            // Auto-rotate for better 3D effect
-            if (params.autoRotate) {
+            // 过山车视角更新
+            if (params.rollercoasterView && spirographPoints.length > 0) {
+                // 更新相机参数，跟随绘制点，但略微滞后
+                if (params.cameraT < params.t - params.cameraOffset) {
+                    params.cameraT += 0.01 * params.speed;
+                }
+                
+                // 获取当前相机位置
+                const cameraPos = getSpirographPosition(params.cameraT);
+                
+                // 获取前方的目标点，用于相机朝向
+                const lookAtT = params.cameraT + 0.1;
+                const targetPos = getSpirographPosition(lookAtT);
+                
+                // 设置相机位置和朝向
+                camera.position.copy(cameraPos);
+                camera.lookAt(targetPos);
+                
+                // 添加一些倾斜效果，使相机略微朝内倾斜，增强过山车感
+                const innerPos = getInnerGearPosition(params.cameraT);
+                const tiltVector = new THREE.Vector3().subVectors(innerPos, cameraPos).normalize().multiplyScalar(0.2);
+                camera.up.set(0, 1, 0); // 先重置相机的上方向
+                camera.up.add(tiltVector); // 添加微小的倾斜
+            }
+            
+            // Auto-rotate for better 3D effect (仅在非过山车视角时)
+            if (params.autoRotate && !params.rollercoasterView) {
                 patternGroup.rotation.y += 0.001;
                 gridHelper.rotation.y += 0.001;
                 
@@ -411,7 +478,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             
-            controls.update();
+            // 仅在非过山车视角时更新控制器
+            if (!params.rollercoasterView) {
+                controls.update();
+            }
+            
             renderer.render(scene, camera);
         }
 
