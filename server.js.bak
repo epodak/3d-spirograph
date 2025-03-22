@@ -30,7 +30,4 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}/`);
     console.log(`Press Ctrl+C to stop the server`);
-});
-
-// Redirect to new server location
-import './src/server/server.js'; 
+}); 
