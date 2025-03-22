@@ -15,6 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const rollercoasterViewCheckbox = document.getElementById('rollercoaster-view');
     const resetBtn = document.getElementById('reset-btn');
     const clearBtn = document.getElementById('clear-btn');
+    
+    // 相机控制相关DOM元素
+    const cameraControlsDiv = document.getElementById('camera-controls');
+    const cameraHeightInput = document.getElementById('camera-height');
+    const cameraDistanceInput = document.getElementById('camera-distance');
+    const cameraTiltInput = document.getElementById('camera-tilt');
+    const resetCameraBtn = document.getElementById('reset-camera-btn');
 
     // Check if Three.js is loaded
     if (typeof THREE === 'undefined') {
@@ -184,6 +191,9 @@ document.addEventListener('DOMContentLoaded', () => {
             t: 0,
             cameraT: 0, // 相机位置的参数
             cameraOffset: 0.1, // 相机与当前绘制点的偏移量
+            cameraHeight: parseFloat(cameraHeightInput.value), // 相机高度偏移
+            cameraDistance: parseFloat(cameraDistanceInput.value), // 相机前后距离调整
+            cameraTilt: parseFloat(cameraTiltInput.value), // 相机倾斜程度
             autoRotate: true,
             // Parameters for gradual drawing
             drawSpeed: 1, // Points to add per frame
@@ -268,6 +278,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Rollercoaster view changed, new value:', rollercoasterViewCheckbox.checked);
             params.rollercoasterView = rollercoasterViewCheckbox.checked;
             
+            // 显示/隐藏相机控制面板
+            cameraControlsDiv.style.display = params.rollercoasterView ? 'block' : 'none';
+            
             // 切换视角时，如果启用过山车视角，将相机位置重置到起点
             if (params.rollercoasterView) {
                 // 禁用OrbitControls，因为我们将手动控制相机
@@ -283,6 +296,30 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // 监听相机控制参数的变化
+        cameraHeightInput.addEventListener('input', () => {
+            params.cameraHeight = parseFloat(cameraHeightInput.value);
+        });
+        
+        cameraDistanceInput.addEventListener('input', () => {
+            params.cameraDistance = parseFloat(cameraDistanceInput.value);
+        });
+        
+        cameraTiltInput.addEventListener('input', () => {
+            params.cameraTilt = parseFloat(cameraTiltInput.value);
+        });
+        
+        // 复位相机按钮
+        resetCameraBtn.addEventListener('click', () => {
+            cameraHeightInput.value = "3";
+            cameraDistanceInput.value = "0";
+            cameraTiltInput.value = "0.2";
+            
+            params.cameraHeight = 3;
+            params.cameraDistance = 0;
+            params.cameraTilt = 0.2;
+        });
+
         function updateColors() {
             params.primaryColor = primaryColorInput.value;
             params.secondaryColor = secondaryColorInput.value;
@@ -292,6 +329,41 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update pen color
             penMaterial.color.set(params.primaryColor);
             penArmMaterial.color.set(params.primaryColor);
+        }
+
+        // 设置相机到曲线上指定参数t的位置（使用切线方向）
+        function setCameraToPosition(t) {
+            const pos = getSpirographPosition(t);
+            const tangent = getSpirographDerivative(t);
+            
+            // 计算垂直于切线方向的上向量
+            const worldUp = new THREE.Vector3(0, 1, 0);
+            const right = new THREE.Vector3().crossVectors(tangent, worldUp).normalize();
+            const up = new THREE.Vector3().crossVectors(right, tangent).normalize();
+            
+            // 应用高度偏移
+            const heightOffset = new THREE.Vector3().copy(up).multiplyScalar(params.cameraHeight);
+            
+            // 应用前后距离偏移
+            const distanceOffset = new THREE.Vector3().copy(tangent).multiplyScalar(params.cameraDistance);
+            
+            // 最终位置
+            const finalPos = new THREE.Vector3().copy(pos).add(heightOffset).add(distanceOffset);
+            camera.position.copy(finalPos);
+            
+            // 目标点
+            const targetPos = new THREE.Vector3().copy(pos).add(tangent.clone().multiplyScalar(5));
+            camera.lookAt(targetPos);
+            
+            // 调整上方向
+            if (params.cameraTilt > 0) {
+                const center = new THREE.Vector3(0, 0, 0);
+                const toCenterDir = new THREE.Vector3().subVectors(center, pos).normalize();
+                const tiltVector = new THREE.Vector3().crossVectors(tangent, toCenterDir).normalize();
+                camera.up.copy(up).lerp(tiltVector, params.cameraTilt);
+            } else {
+                camera.up.copy(up);
+            }
         }
 
         // Reset the spirograph completely
@@ -305,10 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // 如果当前是在过山车视角，则需要重置相机位置到起点
             if (params.rollercoasterView) {
-                const startPos = getSpirographPosition(0);
-                const lookAtPos = getSpirographPosition(0.1);
-                camera.position.copy(startPos);
-                camera.lookAt(lookAtPos);
+                setCameraToPosition(0);
             }
         }
 
@@ -322,10 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // 如果当前是在过山车视角，则需要重置相机位置到起点
             if (params.rollercoasterView) {
-                const startPos = getSpirographPosition(0);
-                const lookAtPos = getSpirographPosition(0.1);
-                camera.position.copy(startPos);
-                camera.lookAt(lookAtPos);
+                setCameraToPosition(0);
             }
         }
 
@@ -357,7 +423,23 @@ document.addEventListener('DOMContentLoaded', () => {
             
             return new THREE.Vector3(x, y, z);
         }
-        
+
+        // 计算螺旋图形在给定参数t处的导数（切线方向）
+        function getSpirographDerivative(t) {
+            const R = params.outerRadius;
+            const r = params.innerRadius;
+            const d = params.penOffset;
+            const h = params.heightAmplitude;
+            
+            // 计算x, y, z方向的导数
+            const dxdt = -(R - r) * Math.sin(t) - d * (R - r) / r * Math.sin((R - r) * t / r);
+            const dzdt = (R - r) * Math.cos(t) - d * (R - r) / r * Math.cos((R - r) * t / r);
+            const dydt = h * (3 * Math.cos(3 * t) * Math.cos(2 * t) - 2 * Math.sin(3 * t) * Math.sin(2 * t));
+            
+            // 返回归一化的导数向量（即单位切线向量）
+            return new THREE.Vector3(dxdt, dydt, dzdt).normalize();
+        }
+
         // Calculate inner gear position (center) with 3D height
         function getInnerGearPosition(t) {
             const R = params.outerRadius;
@@ -449,22 +531,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     params.cameraT += 0.01 * params.speed;
                 }
                 
-                // 获取当前相机位置
-                const cameraPos = getSpirographPosition(params.cameraT);
-                
-                // 获取前方的目标点，用于相机朝向
-                const lookAtT = params.cameraT + 0.1;
-                const targetPos = getSpirographPosition(lookAtT);
-                
-                // 设置相机位置和朝向
-                camera.position.copy(cameraPos);
-                camera.lookAt(targetPos);
-                
-                // 添加一些倾斜效果，使相机略微朝内倾斜，增强过山车感
-                const innerPos = getInnerGearPosition(params.cameraT);
-                const tiltVector = new THREE.Vector3().subVectors(innerPos, cameraPos).normalize().multiplyScalar(0.2);
-                camera.up.set(0, 1, 0); // 先重置相机的上方向
-                camera.up.add(tiltVector); // 添加微小的倾斜
+                // 使用通用函数设置相机位置和朝向
+                setCameraToPosition(params.cameraT);
             }
             
             // Auto-rotate for better 3D effect (仅在非过山车视角时)

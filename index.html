@@ -121,6 +121,20 @@
                     <input type="checkbox" id="rollercoaster-view">
                     <label for="rollercoaster-view">过山车视角</label>
                 </div>
+                <div class="control-group" id="camera-controls" style="display: none;">
+                    <label for="camera-height">视角高度:</label>
+                    <input type="range" id="camera-height" min="0" max="20" value="3" step="0.5">
+                    
+                    <label for="camera-distance">视角距离:</label>
+                    <input type="range" id="camera-distance" min="-10" max="10" value="0" step="0.5">
+                    
+                    <label for="camera-tilt">视角倾斜:</label>
+                    <input type="range" id="camera-tilt" min="0" max="1" value="0.2" step="0.05">
+                    
+                    <div class="buttons">
+                        <button id="reset-camera-btn">复位视角</button>
+                    </div>
+                </div>
                 <div class="buttons">
                     <button id="reset-btn">Reset</button>
                     <button id="clear-btn">Clear</button>
